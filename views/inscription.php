@@ -37,8 +37,8 @@
                 <input type="password" name="mdp"  class="form-control" placeholder="Entrer le mot de passe">
                 </div>
                 <div class="form-group col-md-6">
-                <label for="">Type</label>
-                <select class="form-control" name="" id="">
+                <label for="">Role</label>
+                <select class="form-control" name="role" id="">
                     <option value="Employe">Employe</option>
                     <option value="Membre">Membre</option>
                     <option value="Admin">Admin</option>
@@ -47,6 +47,6 @@
             </div>
             
             <button type="reset" class="btn btn-danger">Annuler</button>            
-            <button type="submit" class="btn btn-success">Enregistrer</button>            
+            <button type="submit" name="ajouter" class="btn btn-success">Enregistrer</button>            
         </form>
     </div>

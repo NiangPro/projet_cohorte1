@@ -43,9 +43,53 @@
                 ]);
 
                 return $req->fetch();
-                
+
             }  catch (\PDOException $e) {
                 die("Erreur: ".$e->getMessage());
             }
+        }
+
+        public function codeExistant($code){
+            try {
+                $req = $this->getDb()->prepare("SELECT * FROM USERS WHERE code = ?");
+                $req->execute([$code]);
+
+                return  $req->fetch();
+
+            } catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
+        public function getAllDocuments(){
+            try {
+               $req = $this->getDb()->prepare("SELECT * FROM DOCUMENT");
+               $req->execute();
+
+               return $req->fetchAll();
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
+        public function addDocument($doc){
+            try{
+                $req = $this->getDb()->prepare("INSERT INTO DOCUMENT 
+                VALUES(:code,:titre, :auteur, :categorie, :anPub, :typeDoc, :genre, :descriptionDoc, :isnb )");
+                $result = $req->execute([
+                    'code' =>$doc->getCode(),
+                    'titre' =>$doc->getTitre(),
+                    'auteur' =>$doc->getAuteur(),
+                    'categorie' =>$doc->getCategorie(),
+                    'anPub' =>$doc->getAnPub(),
+                    'typeDoc' =>$doc->getType(),
+                    'genre' =>$doc->getGenre(),
+                    'descriptionDoc' =>$doc->getDescription(),
+                    'isbn' =>$doc->getIsbn()
+                ]);
+            } catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+            return $result;
         }
     }

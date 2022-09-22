@@ -1,45 +1,42 @@
 <?php 
 
-    require_once('views/partials/_header.php'); 
+    session_start();
+    // entete
+    require_once('views/partials/_header.php');
+
     require_once('models/database.php'); 
     require_once('models/user.php'); 
 
     $db = new Database("biblio");
 
-    if (isset($_POST['login'])) {
-        extract($_POST);
-
-        $user= $db->login($code, $mdp);
-
-        if ($user) {
-            echo "Vous etes connecte";
-            if($user->role == "Admin"){
-
-            }else if($user->role == "Employe"){
-
-            }else{
-
-            }
-        }else{
-            echo "<span class='alert alert-danger'>LE code ou le mot de passe ne concordent pas</span>";
-        }
+    if (isset($_SESSION['user'])) {
+        $user= $_SESSION['user'];
     }
 
-    if (isset($_POST['ajouter'])) {
-        extract($_POST);
-
-        $u = new User($code, $prenom, $nom, $tel, $adresse, $email, $mdp, $role);
-
-        if ($db->addUser($u)) {
-           echo "ajout avec succes";
-        }else{
-            echo "erreur d'ajout";
+   
+    if (isset($_GET['page']) && !empty($_GET['page'])) {
+        require_once('views/partials/_navbar.php');
+        switch ($_GET['page']) {
+            case 'admin':
+                require_once('controllers/adminController.php');
+                break;
+            case 'employe':
+                    require_once('controllers/employeController.php');
+                    break;
+            case 'membre':
+                        require_once('controllers/membreController.php');
+                        break;
+            case 'logout':
+                $_GET['page'] = "";
+                unset($_GET['page']);
+                $_SESSION['user'] = null;
+                session_destroy();
+                return header("Location: index.php");
+                break;
         }
-    
-    }
+     }else{
+        require_once('controllers/loginController.php'); 
+     }
 
-?>
-    
-    <?php require_once('views/login.php'); ?>
-
-<?php require_once('views/partials/_footer.php'); ?>
+    // pied  
+ require_once('views/partials/_footer.php'); 
