@@ -61,6 +61,18 @@
             }
         }
 
+        public function codeDocExistant($code){
+            try {
+                $req = $this->getDb()->prepare("SELECT * FROM DOCUMENT WHERE codeDoc = ?");
+                $req->execute([$code]);
+
+                return  $req->fetch();
+
+            } catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
         public function getAllDocuments(){
             try {
                $req = $this->getDb()->prepare("SELECT * FROM DOCUMENT");
@@ -72,20 +84,65 @@
             }
         }
 
+        public function getDocumentByCode($code){
+            try {
+               $req = $this->getDb()->prepare("SELECT * FROM DOCUMENT where codeDoc = ?");
+               $req->execute([$code]);
+
+               return $req->fetch();
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
+
+
+        public function supprimerDocument($code){
+            try {
+               $req = $this->getDb()->prepare("DELETE FROM DOCUMENT WHERE codeDoc = ?");
+               return $req->execute([$code]);
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
         public function addDocument($doc){
             try{
                 $req = $this->getDb()->prepare("INSERT INTO DOCUMENT 
-                VALUES(:code,:titre, :auteur, :categorie, :anPub, :typeDoc, :genre, :descriptionDoc, :isnb )");
+                VALUES(:code,:titre, :auteur, :categorie, :anPub, :typeDoc, :genre, :descriptionDoc, 12345 )");
                 $result = $req->execute([
                     'code' =>$doc->getCode(),
                     'titre' =>$doc->getTitre(),
                     'auteur' =>$doc->getAuteur(),
                     'categorie' =>$doc->getCategorie(),
-                    'anPub' =>$doc->getAnPub(),
+                    'anPub' =>  $doc->getAnPub(),
                     'typeDoc' =>$doc->getType(),
                     'genre' =>$doc->getGenre(),
                     'descriptionDoc' =>$doc->getDescription(),
-                    'isbn' =>$doc->getIsbn()
+                    // 'isbn' =>$doc->getIsbn()
+                ]);
+            } catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+            return $result;
+        }
+
+        public function editDocument($doc, $codeDoc){
+            try{
+                $req = $this->getDb()->prepare("UPDATE DOCUMENT SET 
+                    codeDoc =:code,titre =:titre, auteur=:auteur, categorie=:categorie, anPub=:anPub, type=:typeDoc, genre=:genre, description=:descriptionDoc, isbn=12345 
+                    WHERE codeDoc =:codeDoc");
+                $result = $req->execute([
+                    'code' =>$doc->getCode(),
+                    'titre' =>$doc->getTitre(),
+                    'auteur' =>$doc->getAuteur(),
+                    'categorie' =>$doc->getCategorie(),
+                    'anPub' =>  $doc->getAnPub(),
+                    'typeDoc' =>$doc->getType(),
+                    'genre' =>$doc->getGenre(),
+                    'descriptionDoc' =>$doc->getDescription(),
+                    'codeDoc' =>$codeDoc,
+                    // 'isbn' =>$doc->getIsbn()
                 ]);
             } catch (\PDOException $e) {
                 die("Erreur: ".$e->getMessage());

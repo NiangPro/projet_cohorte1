@@ -19,7 +19,7 @@ class  User{
         $this->adresse = $adresse;
         $this->email = $email;
         $this->mdp = $mdp;
-        $this->role = $role;
+        $this->role = $role; 
     }
 
     public function getCode(){return $this->code;}

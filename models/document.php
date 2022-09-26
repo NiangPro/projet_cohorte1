@@ -11,7 +11,7 @@ class Document{
     private $isbn;
     private $categorie;
 
-    public function __construct($code, $titre, $auteur, $anPub, $description, $type, $genre, $categorie,$isbn=""){
+    public function __construct($code, $titre, $auteur, $anPub, $description, $type, $genre, $categorie,$isbn=0){
         $this->code = $code;
         $this->titre = $titre;
         $this->auteur = $auteur;

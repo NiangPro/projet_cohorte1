@@ -18,7 +18,7 @@
                 </div>
                 <div class="form-group col-md-6">
                 <label for="">Annee de publication</label>
-                <input type="date" name="anpub" required  class="form-control" placeholder="Entrer l'annee de publication">
+                <input type="date" name="anPub" required  class="form-control" placeholder="Entrer l'annee de publication">
                 </div>
             </div>
             <div class="row">
@@ -61,7 +61,7 @@
             </div>
             <div class="form-group">
               <label for="">ISBN</label>
-              <input type="text" name="isbn" id="" class="form-control">
+              <input type="number" name="isbn" id="" class="form-control">
             </div>
             
             <a href="?page=<?= strtolower($user->role) ?>&menu=doc" class="btn btn-warning">Retour</a>            
