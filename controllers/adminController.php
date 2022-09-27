@@ -3,22 +3,37 @@
 // lors de l'ajout d'utilisateur 
 
 
-if (isset($_POST['ajouter'])) {
+if (isset($_POST['ajouterMembre'])) {
     extract($_POST);
 
     if ($db->codeExistant($code)){
         echo "<div class='text-center alert alert-danger'>Le code existe deja.</div>";
     } else{
-         $u = new User($code, $prenom, $nom, $tel, $adresse, $email, $mdp, $role);
+         $u = new User($code, $prenom, $nom, $tel, $adresse, $email, $mdp, "Membre");
 
             if ($db->addUser($u)) {
-            echo "ajout avec succes";
+            return header("Location:?page=".strtolower($user->role)."&menu=membre");
             }else{
                 echo "erreur d'ajout";
             }
-    }
+    }   
 
-   
+}
+
+if (isset($_POST['editerMembre'])) {
+    extract($_POST);
+
+    if ($code != $_GET['codeMembreEdit'] && $db->codeExistant($code)){
+        echo "<div class='text-center alert alert-danger'>Le code existe deja.</div>";
+    } else{
+         $u = new User($code, $prenom, $nom, $tel, $adresse, $email, $mdp, "Membre");
+
+            if ($db->editUser($u, $_GET['codeMembreEdit'])) {
+            return header("Location:?page=".strtolower($user->role)."&menu=membre");
+            }else{
+                echo "erreur d'edition";
+            }
+    }   
 
 }
 
@@ -64,8 +79,16 @@ if (isset($_GET['code'])) {
         }
     }
 }
-// require_once("views/inscription.php");
 
+if (isset($_GET['codeMembre'])) {
+    if ($db->removeUser($_GET['codeMembre'])) {
+        echo "Suppression avec succes";
+    }else{
+        echo "Erreur de suppression";
+    }
+}
+
+//les redirections
 if (isset($_GET["menu"])) {
     if($_GET['menu'] == 'doc'){
         $docs = $db->getAllDocuments();
@@ -77,6 +100,15 @@ if (isset($_GET["menu"])) {
     }else if($_GET['menu'] == "editDoc"){
         $doc = $db->getDocumentByCode($_GET['code']);
         require_once("views/admin/editDocument.php");
+    }else if($_GET['menu'] == "membre"){
+        $membres = $db->getAllUsers("Membre");
+
+        require_once("views/admin/membre.php");
+    }else if($_GET['menu'] == "addMembre"){
+        require_once("views/admin/addMembre.php");
+    }else if($_GET['menu'] == "editMembre"){
+        $m = $db->getUserByCode($_GET['codeMembreEdit']);
+        require_once("views/admin/editMembre.php");
     }
 }else{
 

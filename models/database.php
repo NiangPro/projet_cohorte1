@@ -34,6 +34,28 @@
             return $result;
         }
 
+        public function editUser(User $u, $code){
+            try{
+                $req = $this->getDb()->prepare("UPDATE USERS SET
+                code =:code,prenom =:prenom, nom=:nom, adresse=:adresse, tel=:tel, email=:email, mdp=:mdp, role=:roleUser
+                WHERE code = :codeExistant");
+                $result = $req->execute([
+                    'code' =>$u->getCode(),
+                    'prenom' =>$u->getPrenom(),
+                    'nom' =>$u->getNom(),
+                    'adresse' =>$u->getAdresse(),
+                    'tel' =>$u->getTel(),
+                    'email' =>$u->getEmail(),
+                    'mdp' =>$u->getMdp(),
+                    'roleUser' =>$u->getRole(),
+                    'codeExistant' =>$code
+                ]);
+            } catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+            return $result;
+        }
+
         public function login($code, $mdp){
             try {
                 $req = $this->getDb()->prepare("SELECT * FROM USERS WHERE (code =:code AND mdp =:mdp)");
@@ -84,6 +106,28 @@
             }
         }
 
+        public function getAllUsers($role){
+            try {
+               $req = $this->getDb()->prepare("SELECT * FROM USERS WHERE role=?");
+               $req->execute([$role]);
+
+               return $req->fetchAll();
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
+        public function getUserByCode($code){
+            try {
+               $req = $this->getDb()->prepare("SELECT * FROM USERS where code = ?");
+               $req->execute([$code]);
+
+               return $req->fetch();
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
         public function getDocumentByCode($code){
             try {
                $req = $this->getDb()->prepare("SELECT * FROM DOCUMENT where codeDoc = ?");
@@ -95,7 +139,14 @@
             }
         }
 
-
+        public function removeUser($code){
+            try {
+               $req = $this->getDb()->prepare("DELETE FROM USERS WHERE code = ?");
+               return $req->execute([$code]);
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
 
         public function supprimerDocument($code){
             try {

@@ -17,7 +17,7 @@
                 <?php endif; ?>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">Membres</a>
+                <a class="nav-link" href="?page=<?= strtolower($user->role) ?>&menu=membre">Membres</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Pret</a>
