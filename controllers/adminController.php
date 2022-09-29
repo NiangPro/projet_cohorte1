@@ -20,6 +20,19 @@ if (isset($_POST['ajouterMembre'])) {
 
 }
 
+if(isset($_POST['ajouterPret'])){
+    extract($_POST);
+
+    $p = new Pret($codeMembre, $codeDoc, $datePret, $dateRetour);
+
+    if($db->addPret($p)){
+        return  header('Location: ?page='.strtolower($user->role).'&menu=pret');
+    }else{
+        echo "<div class='alert alert-danger'>Erreur d'ajout</div>";
+    }
+}
+
+
 if (isset($_POST['editerMembre'])) {
     extract($_POST);
 
@@ -109,6 +122,13 @@ if (isset($_GET["menu"])) {
     }else if($_GET['menu'] == "editMembre"){
         $m = $db->getUserByCode($_GET['codeMembreEdit']);
         require_once("views/admin/editMembre.php");
+    }else if($_GET['menu'] == "pret"){
+        $prets = $user->role != "Membre" ? $db->getAllPrets() : $db->getAllPretsByMembre($user->code);
+        require_once("views/admin/pret.php");
+    }else if($_GET['menu'] == "addPret"){
+        $membres = $db->getAllUsers("Membre");
+        $docs = $db->getAllDocuments();
+        require_once("views/admin/addPret.php");
     }
 }else{
 

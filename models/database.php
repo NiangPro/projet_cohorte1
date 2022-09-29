@@ -139,6 +139,91 @@
             }
         }
 
+        public function getAllPrets(){
+            try {
+               $req = $this->getDb()->prepare("SELECT id,p.codeMembre as codeMembre,d.codeDoc as codeDoc,titre, auteur, prenom, nom, datePret, dateRetour
+                FROM DOCUMENT d, USERS u, PRET p
+                 where (p.codeDoc = d.codeDoc AND p.codeMembre = u.code)");
+               $req->execute();
+
+               return $req->fetchAll();
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
+        public function getAllPretsByMembre($codeMembre){
+            try {
+               $req = $this->getDb()->prepare("SELECT id,p.codeMembre as codeMembre,d.codeDoc as codeDoc, titre, auteur, prenom, nom, datePret, dateRetour
+                FROM DOCUMENT d, USERS u, PRET p
+                 where (p.codeDoc = d.codeDoc AND p.codeMembre = ?)");
+               $req->execute([$codeMembre]);
+
+               return $req->fetchAll();
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
+        public function getPretById($id){
+            try {
+               $req = $this->getDb()->prepare("SELECT * FROM PRET 
+                 where id=?");
+               $req->execute([$id]);
+
+               return $req->fetch();
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
+        public function addPret(Pret $p){
+            try {
+               $req = $this->getDb()->prepare("INSERT INTO PRET
+                VALUES(null, :codeMembre, :codeDoc, :datePret, :dateRetour)");
+              return $req->execute([
+                'codeMembre' => $p->getCodeMembre(),
+                'codeDoc' => $p->getCodeDoc(),
+                'datePret' => $p->getDatePret(),
+                'dateRetour' => $p->getDateRetour()
+               ]);
+
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
+        public function editPret(Pret $p, $id){
+            try {
+               $req = $this->getDb()->prepare("UPDATE PRET
+                SET codeMembre=:codeMembre, codeDoc=:codeDoc, datePret=:datePret, dateRetour=:dateRetour
+                WHERE id=:id");
+              return $req->execute([
+                'codeMembre' => $p->getCodeMembre(),
+                'codeDoc' => $p->getCodeDoc(),
+                'datePret' => $p->getDatePret(),
+                'dateRetour' => $p->getDateRetour(),
+                'id'=>$id
+               ]);
+
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
+        public function removePret($id){
+            try {
+               $req = $this->getDb()->prepare("DELETE FROM PRET
+                WHERE id=:id");
+              return $req->execute([
+                'id'=>$id
+               ]);
+
+            }catch (\PDOException $e) {
+                die("Erreur: ".$e->getMessage());
+            }
+        }
+
         public function removeUser($code){
             try {
                $req = $this->getDb()->prepare("DELETE FROM USERS WHERE code = ?");

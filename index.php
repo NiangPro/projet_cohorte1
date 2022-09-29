@@ -7,6 +7,7 @@
     require_once('models/database.php'); 
     require_once('models/user.php'); 
     require_once('models/document.php'); 
+    require_once('models/pret.php'); 
 
     $db = new Database("biblio");
 
